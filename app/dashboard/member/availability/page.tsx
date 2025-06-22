@@ -1,12 +1,20 @@
-import MonthCalendar from '@/components/availability/Month'
-import WeekCalendar from '@/components/availability/Week'
-import React from 'react'
+'use client'
+import Calendar from '@/components/availability/Calendar'
+import CalendarCell from '@/components/calendar/CalendarCell';
+import { CalendarProvider } from '@/components/calendar/CalendarContext';
+
 
 export default function page() {
+
   return (
     <div className=' flex flex-1'>
-      <WeekCalendar />
-      <MonthCalendar />
+      <CalendarProvider>
+      <Calendar >
+        {(day) => (
+          <CalendarCell key={day.toString()} day={day} />
+        )}
+      </Calendar>
+      </CalendarProvider>
     </div>
   )
 }

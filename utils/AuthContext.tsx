@@ -2,19 +2,9 @@
 'use client'
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {jwtDecode} from 'jwt-decode';
-import { getMe } from './auth';
+import { getAccessToken, getMe, isIntercesseurFunction, isResponsableFunction } from './auth';
+import { UserType } from '@/types/user';
 
-
-interface UserType {
-    id: string;
-    username: string;
-    email?: string;
-    first_name?: string;
-    last_name?:string;
-    phone?:string,
-    exp?: number;
-    [key: string]: any;
-  }
 
   interface DecodeType {
     user_id: string,
@@ -28,6 +18,8 @@ interface AuthContextType {
   login: (access: string, refresh: string) => void;
   logout: () => void;
   loading: boolean;
+  isIntercesseur: boolean;
+  isResponsable: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -36,33 +28,68 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<UserType | null> (null);
     const [decode, setDecode] = useState<DecodeType | null >(null);
     const [loading, setLoading] = useState(true);
+    const [isIntercesseur, setIsIntercesseur] = useState(false);
+    const [isResponsable, setIsResponsable] = useState(false);
 
     useEffect(() => {
       setLoading(true);
-        const setUp = async() =>{
-        const token =  localStorage.getItem('access_token');
-        if (token) {
-            try {
-            const decoded: any = jwtDecode(token);
-            setDecode(decoded);
+      const setUp = async() =>{
+      const access_token =  localStorage.getItem('access_token');
+      const refresh_token = localStorage.getItem('refresh_token');
+      if (access_token && refresh_token) {
+          try {
+          const decoded: any = jwtDecode(access_token);
+          setDecode(decoded);
 
-            const now = Date.now() / 1000; 
-            const remainingTime = decoded.exp - now;
-            if(remainingTime>0){
-              setUser(await getMe())
-              const logoutTimeout = setTimeout(() => {
-                logout();
-              }, remainingTime * 1000);
-              return () => clearTimeout(logoutTimeout);
-            }      
+          const now = Date.now() / 1000; 
+          const remainingTime = decoded.exp - now;
+          if(remainingTime>0){
+            setUser(await getMe());
+            setIsIntercesseur(await isIntercesseurFunction());
+            setIsResponsable(await isResponsableFunction())
+          }
+          else{
+            const new_access = await getAccessToken({'refresh':refresh_token})
+            if(new_access){
+              login(new_access, refresh_token)
             }
-            catch {
-              logout();
-            
-            }
-        }}
-        setUp()
-        setLoading(false);
+          }
+          }
+          catch {
+            logout();
+          }
+          finally{
+            setLoading(false)
+          }
+      }}
+      setUp();
+
+
+      const checkAndRefreshToken = async () => {
+        const access_token = localStorage.getItem("access_token");
+        if (!access_token) return;
+        const decoded:any = jwtDecode(access_token);
+        const now = Date.now() / 1000;
+        
+        if (decoded.exp - now < 60) {
+          // token expires in less than a minute
+          try {
+            const refresh_token = localStorage.getItem("refresh_token");
+            if (!refresh_token) throw new Error("No refresh token found");
+
+            const new_token = await getAccessToken({refresh:refresh_token})
+            if(new_token)localStorage.setItem("access_token", new_token);
+            else logout();
+          } catch {
+            logout(); 
+          }
+        }
+      };
+
+      const interval = setInterval(checkAndRefreshToken, 60000);
+      return () => clearInterval(interval);
+
+        
     }, []);
   
     const login = async (access: string, refresh: string) => {
@@ -71,7 +98,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const decoded: any = jwtDecode(access);
       setDecode(decoded);
       setUser(await getMe())
-
+      setIsIntercesseur(await isIntercesseurFunction())
+      setIsResponsable(await isResponsableFunction())
     }
   
     const logout = () => {
@@ -87,7 +115,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       decode,
       login,
       logout,
-      loading
+      loading,
+      isIntercesseur,
+      isResponsable
     };
   
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

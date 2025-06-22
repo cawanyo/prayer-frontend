@@ -1,7 +1,7 @@
 'use client'
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Bell, Calendar1, Church, CircleUserRound, House, Menu, NotebookPen, X } from 'lucide-react'
+import { ArrowDown, ArrowUp } from 'lucide-react'
 import Link from 'next/link'
 import React, { useContext, useState } from 'react'
 import { NavbarType } from '@/constants'
@@ -18,7 +18,7 @@ interface link_props {
 
 function  NavBarLink({ href, isActive, children}: link_props){
     return (
-        <Link href={href} className={cn("flex items-center gap-2 text-gray-700 w-full h-12 p-2 rounded-md ",isActive && 'bg-blue-50' )}>
+        <Link href={href} className={cn("flex items-center gap-2 text-gray-700 w-full h-12 p-2 rounded-md cursor-pointer ",isActive && 'bg-blue-50' )}>
             {children}
         </Link>
     )
@@ -42,12 +42,13 @@ export default function Navbar() {
 
             <nav className="space-y-2 text-sm ">
                 {
-                    NavbarType.map((type, index) => 
+                    NavbarType(auth?.isIntercesseur, auth?.isResponsable).map((type, index) => 
                         <NavBarLink  href={type.href} isActive={type.href == pathname} key={index} >
                             {type.icon} {type.name}
                         </NavBarLink>
                     ) 
                 }
+                
             </nav>
         </aside>
 
@@ -56,10 +57,11 @@ export default function Navbar() {
             <div className="w-full flex justify-end p-3">
                 {/* Mobile menu button */}
                 <button
-                    className="sm:hidden p-2 rounded-md focus:outline-none  hover:bg-gray-200"
+                    className="sm:hidden p-2   flex items-center justify-center gap-2 bg-gray-50 rounded-md focus:outline-none  hover:bg-gray-200"
                     onClick={() => setMenuOpen(!menuOpen)}
                 >
-                    {menuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+                    <p className='text-xl'>Dashboard Menu</p>
+                    {menuOpen ? <ArrowUp className="w-5 h-5" /> :  <ArrowDown className="w-5 h-5" />}
                 </button>
             </div>
             <AnimatePresence>
@@ -72,7 +74,7 @@ export default function Navbar() {
                     transition={{ duration: 0.2 }}
                 >
                         {
-                            NavbarType.map((type, index) => 
+                            NavbarType(auth?.isIntercesseur, auth?.isResponsable).map((type, index) => 
                                 <NavBarLink  href={type.href} isActive={type.href == pathname} key={index} >
                                     {type.icon} {type.name}
                                 </NavBarLink>

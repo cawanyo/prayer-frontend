@@ -59,7 +59,23 @@ const RenderInput = ({field, props} : {field:any, props: CustomProps}) => {
 
                     <FormControl>
                         <Input
-                        
+                            disabled={props.disabled}
+                            placeholder={props.placeholder}
+                            {...field}
+                            className='shad-input border-0'
+                        />
+                    </FormControl>
+                </div>
+            )
+        case FormFieldType.TIME:
+            return (
+                <div className='flex rounded-md border border-blue-200 bg-white text-gray-800'>
+                    
+
+                    <FormControl>
+                        <Input
+                            type='time'
+                            disabled={props.disabled}
                             placeholder={props.placeholder}
                             {...field}
                             className='shad-input border-0'
@@ -90,6 +106,7 @@ const RenderInput = ({field, props} : {field:any, props: CustomProps}) => {
                                 {...field}
                                 value={field.value?? ""}
                                 className='shad-input border-0'
+                                disabled={props.disabled}
                             />
                         </FormControl>
                     </div>
@@ -101,7 +118,7 @@ const RenderInput = ({field, props} : {field:any, props: CustomProps}) => {
                         placeholder={props.placeholder}
                         {...field}
                         className='shad-textArea border border-blue-200'
-                        
+                        disabled={props.disabled}
                     />
                 </FormControl>
             )
@@ -114,7 +131,7 @@ const RenderInput = ({field, props} : {field:any, props: CustomProps}) => {
                     onChange={field.onChange}
                     className='input-phone border border-blue-200'
                     international
-                    
+                    disabled={props.disabled}
                 />
             )
         case FormFieldType.CHECKBOX:
@@ -124,7 +141,7 @@ const RenderInput = ({field, props} : {field:any, props: CustomProps}) => {
                         id={props.name}
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        disabled={field.disabled}
+                        disabled={props.disabled}
                     />
                     <Label htmlFor={props.name} className='checkbox-label'>
                         {props.label}
@@ -152,7 +169,7 @@ const RenderInput = ({field, props} : {field:any, props: CustomProps}) => {
                             showTimeSelect={props.showTimeSelect ?? false}
                             timeInputLabel='Time:'
                             wrapperClassName='date-picker'
-                            disabled={field.disabled}
+                            disabled={props.disabled}
                         />
                     </FormControl>
                 </div>

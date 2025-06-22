@@ -3,39 +3,27 @@ import { CheckCircle, Send, Clock, MessageCircle, ChevronDown, ChevronUp, XCircl
 import { AnyARecord } from "dns";
 import { getPrayerComment, updatePrayerState } from "@/utils/prayer_requests";
 import CommentForm from "../prayer/CommentForm";
+import { CommentType, PrayerRequestType, PrayerStateType } from "@/types/prayer";
 
-interface Prayer {
-  id:number;
-  content: string;
-  submiter_name: string;
-  submiter_phone: string;
-  submiter_email: string;
-  submission_date: string;
-  state: "pending" | "answered" | "failed";
-}
 
-interface Comment {
-  content: string;
-  submiter_name: string,
-  created_at: Date
-}
+
 
 interface PrayerCardProps {
-  prayer: Prayer;
+  prayer: PrayerRequestType;
 }
 
-type StateType = 'pending' | 'answered' | 'failed';
 
-const stateLabels : Record<StateType, any>= {
+
+const stateLabels : Record<PrayerStateType, any>= {
   'pending': { label: "Pending", icon: <Clock className="w-4 h-4 mr-1" />, style: "bg-yellow-50 text-yellow-600", text_style: " bg-yellow-50 text-yellow-600 hover:bg-yellow-200" },
   'answered': { label: "Answered", icon: <Check className="w-4 h-4 mr-1" />, style: "bg-green-50 text-green-600", text_style: " bg-green-50 text-green-600 rounded hover:bg-green-200" },
   'failed': { label: "Failed", icon: <XCircle className="w-4 h-4 mr-1" />, style: "bg-red-50 text-red-600", text_style: "bg-red-50 text-red-600 rounded hover:bg-red-200" },
 };
 
 const PrayerCard: React.FC<PrayerCardProps> = ({ prayer }) => {
-  const [comments, setComments] = useState<Comment[]>([])
+  const [comments, setComments] = useState<CommentType[]>([])
   const [commentId, setCommentId] = useState<number>(0)
-  const [state, setState] = useState<StateType>(prayer.state)
+  const [state, setState] = useState<PrayerStateType>(prayer.state)
 
 
   useEffect(() => {
@@ -96,7 +84,7 @@ const PrayerCard: React.FC<PrayerCardProps> = ({ prayer }) => {
 
         <div className="flex gap-2 text-xs">
             {
-                (Object.entries(stateLabels) as [StateType, any][]).map(([key, { label, icon, text_style }]) => (
+                (Object.entries(stateLabels) as [PrayerStateType, any][]).map(([key, { label, icon, text_style }]) => (
                     <button
                         key={key}
                         className={`px-2 py-1 flex items-center text-xs font-medium ${text_style}`}

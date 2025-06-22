@@ -6,9 +6,7 @@ import Footer from "../components/base/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen  flex flex-col justify-between">
-      <div>
-        <Header />
+    <main className="">
 
         <section className="grid md:grid-cols-2 gap-8 items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
           {/* Left content */}
@@ -26,7 +24,7 @@ export default function Home() {
                   Soumettre un sujet
                 </button>
               </Link>
-              <Link href="/about">
+              <Link href="/community">
                 <button className="bg-blue-100 text-blue-800 px-6 py-2 rounded-lg hover:bg-blue-200">
                   Learn More
                 </button>
@@ -43,9 +41,6 @@ export default function Home() {
             />
           </div>
         </section>
-      </div>
-
-      <Footer />
     </main>
   );
 }

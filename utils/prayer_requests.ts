@@ -1,3 +1,49 @@
+import { PrayerRequestType } from "@/types/prayer";
+
+export const allPrayers = async () => {
+  try{
+  
+      const token = localStorage.getItem('access_token');
+
+      const res = await fetch('http://127.0.0.1:8000/api/prayers/list', {
+      headers: {
+          Authorization: `Bearer ${token}`,
+      },
+      });
+     
+      const prayers = await res.json();
+      console.log(prayers)
+      return prayers
+  } catch (error) {
+    return [];
+  }
+}
+
+export const addPrrayerFunction = async (prayer:  PrayerRequestType) => {
+  try {
+    console.log('enter')
+    const res = await fetch("http://127.0.0.1:8000/api/prayers/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...prayer,
+        user: prayer.user? prayer.user.id : null,
+        category: null, // Adjust to match actual category ID,
+        state: 'pending'
+      }),
+    });
+    if (!res.ok) {
+      throw new Error("Failed to submit prayer");
+    }
+
+    console.log(res)
+    return res;
+
+  } catch (err: any) {
+    return null
+  } 
+
+}
 export const getMyPrayers = async () => {
     try{
     

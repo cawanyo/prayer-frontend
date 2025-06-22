@@ -1,4 +1,4 @@
-import { Calendar1, Church, CircleUserRound, House, NotebookPen } from "lucide-react"
+import { Calendar1, Church, CircleUserRound, NotebookPen, Settings } from "lucide-react"
 
 export enum FormFieldType {
     INPUT = 'input',
@@ -8,7 +8,8 @@ export enum FormFieldType {
     DATE_PICKER = 'datePicker',
     SELECT = 'select',
     SKELETON = 'skeleton',
-    PASSWORD = 'password'
+    PASSWORD = 'password',
+    TIME = 'time'
   
   }
 
@@ -31,47 +32,38 @@ export enum FormFieldType {
     },
   ]
 
+  interface HeaderType {
+    name: string, 
+    href: string
+  }
 
-  export const HeaderType = [
+  export const HeaderContent  = (isAuthenticated?: boolean) : HeaderType[] => [
     {
       name: 'Home',
       href: '/'
     },
     {
-      name: 'Dashboard',
-      href: 'dashboard'
-    },
-    {
       name: 'Submit',
-      href: 'prayer'
+      href: '/prayer'
     },
     {
       name: 'Community',
-      href: 'community'
-    }
+      href: '/community'
+    },
+    {
+      name: isAuthenticated? 'Dashboard' : '',
+      href: isAuthenticated? '/dashboard' : ''
+    },
   ]
 
 
-  export const NavbarType = [
-    {
-      name: 'Accueil' ,
-      href: '/',
-      icon: <House color='gray' />
-    },
+  export const NavbarType = ( isIntercesseur?:boolean, isResponsable?: boolean) => {
+    
+    let out = [
     {
       name: 'Prière',
       href: '/dashboard/prayers',
       icon: <Church  color='gray'/>
-    },
-    {
-      name: 'Disponibilité',
-      href: '/dashboard/member/availability',
-      icon: <Calendar1 color='gray'/>
-    },
-    {
-      name: 'Planing',
-      href: '/dashboard/planing',
-      icon: <NotebookPen color='gray' />
     },
     {
       name: 'Profile',
@@ -79,3 +71,40 @@ export enum FormFieldType {
       icon: <CircleUserRound color='gray' />
     }
   ]
+
+  if (isIntercesseur || isResponsable){
+
+  out = out.concat( [
+    {
+      name: 'Disponibilité' ,
+      href: '/dashboard/member/availability',
+      icon: <Calendar1 color='gray'/>
+    },
+    {
+      name: 'Planing',
+      href: '/dashboard/member/planing',
+      icon: <NotebookPen color='gray' />
+    },
+    
+  ])
+  }
+
+  if (isResponsable){
+    out = out.concat( [
+      {
+        name: 'Toutes les prières' ,
+        href: '/dashboard/responsable/prayers',
+        icon: <Church  color='gray'/>
+      },
+      {
+        name: 'Gestion membres' ,
+        href: '/dashboard/responsable/member',
+        icon:<Settings  color='gray'/>
+      },
+    ])
+  }
+
+  return out
+
+
+}

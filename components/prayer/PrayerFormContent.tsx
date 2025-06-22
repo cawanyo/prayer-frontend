@@ -13,9 +13,13 @@ type FormValues = {
   phone?: string;
   subjectType?: string;
 };
-const PrayerFormContent = ({form, disabled}: {form: UseFormReturn<FormValues>,
+
+interface props {
+  form: UseFormReturn<FormValues>,
+}
+const PrayerFormContent = ({form, }: {form: UseFormReturn<FormValues>,
                                             
-                                            disabled?:boolean}) => {
+                                            }) => {
   return (
     <div className='md:w-2xl'>
         <CustomFormField 
@@ -26,7 +30,7 @@ const PrayerFormContent = ({form, disabled}: {form: UseFormReturn<FormValues>,
           placeholder="John Doe"
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
-          disabled
+          
 
         />
 
@@ -38,7 +42,7 @@ const PrayerFormContent = ({form, disabled}: {form: UseFormReturn<FormValues>,
           placeholder="johndoe@gmail.com"
           iconSrc="/assets/icons/email.svg"
           iconAlt="email"
-          disabled
+          
         />
 
        
@@ -49,7 +53,7 @@ const PrayerFormContent = ({form, disabled}: {form: UseFormReturn<FormValues>,
           name="phone"
           label="Numero"
           placeholder="(+33) 8888888888"
-          disabled
+          
         />
 
 
@@ -59,7 +63,7 @@ const PrayerFormContent = ({form, disabled}: {form: UseFormReturn<FormValues>,
             name="subjectType"
             label="Type de sujet"
             placeholder="Selectionner le type de sujet"
-            disabled
+            
 
         >
             {
@@ -91,7 +95,7 @@ const PrayerFormContent = ({form, disabled}: {form: UseFormReturn<FormValues>,
           control={form.control}
           name="subject"
           label="Sujet de Prière (*)"
-          disabled
+          
         />
     </div>
   )

@@ -7,8 +7,8 @@ type FormValues = {
     username: string;
     password: string;
     passwordConfirm: string,
-    firstName: string,
-    lastName: string,
+    first_name: string,
+    last_name: string,
     email: string,
     phone?: string,
     member: boolean
@@ -25,31 +25,31 @@ export default function SignUpForm({form}: {form: UseFormReturn<FormValues>}) {
             placeholder="John Doe"
             iconSrc="/assets/icons/user.svg"
             iconAlt="user"
-            disabled
+
 
             />
         
         <CustomFormField 
                 type={FormFieldType.INPUT}
                 control={form.control}
-                name="firstName"
+                name="first_name"
                 label="First Name"
                 placeholder="John Doe"
                 iconSrc="/assets/icons/user.svg"
                 iconAlt="user"
-                disabled
+                
 
                 />
             
             <CustomFormField 
                 type={FormFieldType.INPUT}
                 control={form.control}
-                name="lastName"
+                name="last_name"
                 label="Last Name"
                 placeholder="John Doe"
                 iconSrc="/assets/icons/user.svg"
                 iconAlt="user"
-                disabled
+                
 
                 />
 
@@ -61,7 +61,7 @@ export default function SignUpForm({form}: {form: UseFormReturn<FormValues>}) {
             placeholder="john.doe@gmail.com"
             iconSrc="/assets/icons/user.svg"
             iconAlt="email"
-            disabled
+            
 
             />
         
@@ -71,7 +71,7 @@ export default function SignUpForm({form}: {form: UseFormReturn<FormValues>}) {
             name="phone"
             label="Numero"
             placeholder="(+33) 8888888888"
-            disabled
+            
             />
 
         <CustomFormField 
@@ -82,7 +82,7 @@ export default function SignUpForm({form}: {form: UseFormReturn<FormValues>}) {
                 placeholder="********"
                 iconSrc="/assets/icons/user.svg"
                 iconAlt="user"
-                disabled
+                
 
                 />
         <CustomFormField 
@@ -93,7 +93,7 @@ export default function SignUpForm({form}: {form: UseFormReturn<FormValues>}) {
                 placeholder="********"
                 iconSrc="/assets/icons/user.svg"
                 iconAlt="user"
-                disabled
+                
 
                 />
         

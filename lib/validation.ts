@@ -18,9 +18,17 @@ const emailAvailable = async (email: string): Promise<boolean> => {
 
 
 export const CommentValidation = z.object({
-  content: z.string().min(10, 'Too short')
+  content: z.string().min(2, 'Too short')
 })
 
+
+export const ProgramValidation = z.object({
+  name: z.string().min(3, 'Too short'),
+  start_time: z.string().min(1, "Start time is required"),
+  end_time: z.string().min(1, "End time is required"),
+  person: z.string().optional(),
+
+})
 
 export const SignInFormValidation = z.object({
   username: z
@@ -36,13 +44,13 @@ export const SignInFormValidation = z.object({
 })
 
 export const SignUpFormValidation = z.object({
-  firstName: z.string().min(2, "Name Too Short"),
+  first_name: z.string().min(2, "Name Too Short"),
   username: z.string()
             .min(2, "Name Too Short")
             .refine(async (value) => await usernameAvailable(value), {
               message: "Username is already taken",
             }),
-  lastName: z.string(),
+  last_name: z.string(),
   email: z
     .string()
     .email('This email is invalid')
@@ -70,6 +78,23 @@ export const SignUpFormValidation = z.object({
   message: "Password don't match",
   path: ["passwordConfirm"]
 })
+
+export const UpdateValidation = z.object({
+  first_name: z.string().min(2, "Name Too Short"),
+  username: z.string()
+            .min(2, "Name Too Short")
+           ,
+  last_name: z.string(),
+  email: z
+    .string()
+    .email('This email is invalid')
+    ,
+    phone: z
+    .optional(
+    z.string()),
+
+})
+
 
 export const PrayerFormValidation= z.object({
   name: z

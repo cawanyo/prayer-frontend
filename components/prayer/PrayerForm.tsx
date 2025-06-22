@@ -12,6 +12,8 @@ import { PrayerFormValidation } from "@/lib/validation"
 import PrayerFormContent from "./PrayerFormContent"
 import { useRouter } from "next/navigation"
 import { AuthContext } from "@/utils/AuthContext"
+import { addPrrayerFunction } from "@/utils/prayer_requests"
+import { UserType } from "@/types/user"
 
 
 
@@ -42,33 +44,17 @@ export default function Priere() {
 
     setIsLoading(true);
     setError("");
-    try {
-      const res = await fetch("http://127.0.0.1:8000/api/prayers/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content: formData.subject,
-          submiter_name: formData.name,
-          submiter_email: formData.email,
-          submiter_phone: formData.phone,
-          user: auth?.user? auth.user.id : null,
-          category: null, // Adjust to match actual category ID,
-          state: 'pending'
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to submit prayer");
-      }
+    const data = await addPrrayerFunction({
+      content: formData.subject,
+      submission_date: "",
+      state: "pending",
+      category: null,
+      user: auth?.user as UserType,
+      id: 0
+    })
+    if(data)
       router.push("/prayer/success");
 
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-
-    router.push(('prayer/success'))
   }
 
 

@@ -22,7 +22,7 @@ export default function SignInForm({form}: {form: UseFormReturn<FormValues>}) {
             placeholder="John_Doe"
             iconSrc="/assets/icons/user.svg"
             iconAlt="user"
-            disabled
+            
 
         />
 
@@ -33,9 +33,7 @@ export default function SignInForm({form}: {form: UseFormReturn<FormValues>}) {
                 label="Password"
                 placeholder="********"
                 iconSrc="/assets/icons/user.svg"
-                iconAlt="user"
-                disabled
-
+                iconAlt="user"     
                 />
     </div>
 

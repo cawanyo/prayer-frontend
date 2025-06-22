@@ -5,27 +5,31 @@ import SubmitButton from "@/components/form/SubmitButton";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { SignInFormValidation, SignUpFormValidation } from "@/lib/validation";
-import { createUser, getMe, loginUser } from "@/utils/auth";
+import { askMember, createUser, getMe, loginUser } from "@/utils/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useContext } from "react";
-import { AuthContext } from "@/utils/AuthContext";
+import {  useAuth } from "@/utils/AuthContext";
 
 const AuthPage = () => {
 
-  const auth = useContext(AuthContext)
+  const auth = useAuth()
 
   const [isLogin, setIsLogin] = useState(true);
-  const [token, setToken] = useState('');
 
   const toggleMode = () => setIsLogin(!isLogin);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const  router = useRouter();
+
+  useEffect( () => {
+    if(!auth?.loading && auth?.isAuthenticated){
+      redirect('/dashboard')
+    }
+  }, [auth?.isAuthenticated])
 
   // 1. Define your form. 
   const signInForm = useForm<z.infer<typeof SignInFormValidation>>({
@@ -41,9 +45,9 @@ const AuthPage = () => {
     mode: "onChange",
     resolver: zodResolver(SignUpFormValidation),
     defaultValues: {
-      lastName: "",
+      last_name: "",
       username: "",
-      firstName: "",
+      first_name: "",
       email: "",
       phone: "",
       passwordConfirm:"",
@@ -53,7 +57,6 @@ const AuthPage = () => {
   })
 
   async function onSignInSubmit(formData: z.infer<typeof SignInFormValidation>){
-
     setIsLoading(true);
     setError("");
     const res = await loginUser({ username: formData.username, password: formData.password });
@@ -70,8 +73,8 @@ const AuthPage = () => {
     setError("");
     const res = await createUser({
       username: formData.username,
-      first_name: formData.firstName,
-      last_name: formData.lastName,
+      first_name: formData.first_name,
+      last_name: formData.last_name,
       email: formData.email,
       password: formData.password,
       phone: formData.phone
@@ -79,7 +82,13 @@ const AuthPage = () => {
 
     if (res.success) {
       const login = await loginUser({ username: formData.username, password: formData.password });
-      router.push('/dashboard')
+      if (login.success){
+        await auth?.login(login.data.access, login.data.refresh);
+        
+        if (formData.member)
+          await askMember()
+        router.push('/dashboard');
+      }
       
     } else {
      
@@ -100,7 +109,7 @@ const AuthPage = () => {
                 <form onSubmit={signInForm.handleSubmit(onSignInSubmit)} className="space-y-6 flex-1">   
                    
                     <SignInForm form={signInForm} />
-                    <SubmitButton text="Sign In"/>
+                    <SubmitButton text="Sign In" disabled={isLoading}/>
                 </form>
             </Form>   
         )
@@ -111,7 +120,7 @@ const AuthPage = () => {
             <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-6 flex-1">   
                 <SignUpForm form={signUpForm} />   
                 <p>{error}</p>
-                <SubmitButton text="Sign Up"/>
+                <SubmitButton text="Sign Up" disabled={isLoading}/>
             </form>
         </Form>
 
