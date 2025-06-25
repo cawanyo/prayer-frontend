@@ -54,7 +54,11 @@ export default function ProfileUpdate({disabled, setDisabled, user}: props) {
                   disabled?
                   <Button className="bg-gray-600" onClick={() => setDisabled(false)}> Update Profile</Button>
                   :
-                  <SubmitButton text="Update" disabled={isLoading}/>
+                  <div className='flex justify-end gap-3 items-center'> 
+                        <Button className="bg-gray-600" onClick={() => setDisabled(true)}> Cancel </Button>
+                       <SubmitButton text="Update" disabled={isLoading}/>
+                  </div>
+                 
                 }
                 
             </form>

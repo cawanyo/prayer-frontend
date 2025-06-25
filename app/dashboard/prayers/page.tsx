@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import { getMyPrayers } from "@/utils/prayer_requests";
 import PrayerCard from "@/components/base/PrayerCard";
 import { PrayerRequestType } from "@/types/prayer";
+import EmptyCard from "@/components/base/EmptyCard";
 
 
 
@@ -24,6 +25,7 @@ const PrayerDashboard = () => {
       <h2 className="text-2xl font-bold mb-4">Prayer Dashboard</h2>
       <div className="grid md:grid-cols-2 gap-4">
         {prayers.map((prayer, index) => <PrayerCard prayer={prayer} key={index}/>) }
+        <EmptyCard href="/prayer"/>
        </div>
     </div>
   );

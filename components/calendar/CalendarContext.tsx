@@ -12,6 +12,8 @@ interface CalendarContextType {
   setCurrentDate: (date: Date) => void;
   selectedDateKey: string | null;
   setSelectedDateKey: (dateKey: string | null) => void;
+  data: any,
+  setData: (d:any) => void
 }
 
 
@@ -21,7 +23,7 @@ const CalendarContext = createContext<CalendarContextType | undefined>(undefined
 export const CalendarProvider = ({ children }: { children: React.ReactNode }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
-
+    const [data, setData] = useState<any>(null);
   
     return (
       <CalendarContext.Provider
@@ -30,6 +32,8 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
           setCurrentDate,
           selectedDateKey,
           setSelectedDateKey,
+          data,
+          setData
         }}
       >
         {children}

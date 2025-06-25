@@ -1,11 +1,12 @@
 'use client'
-import React from "react";
 import Link from "next/link";
-import Header from "../components/base/Header";
-import Footer from "../components/base/Footer";
+
 
 export default function Home() {
+
+
   return (
+    <>
     <main className="">
 
         <section className="grid md:grid-cols-2 gap-8 items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
@@ -42,5 +43,7 @@ export default function Home() {
           </div>
         </section>
     </main>
+   
+    </>
   );
 }

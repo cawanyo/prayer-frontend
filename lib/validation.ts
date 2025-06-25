@@ -1,9 +1,9 @@
-import { z } from "zod";
+import { string, z } from "zod";
 
 const usernameAvailable = async (username: string) => {
   const res = await fetch(`http://127.0.0.1:8000/api/accounts/check-username/?username=${username}`);
   if (!res.ok) return false;
-
+  console.log(res)
   const data = await res.json();
   return data.available;
 };
@@ -103,12 +103,12 @@ export const PrayerFormValidation= z.object({
     .optional(),
   email: z.optional(
     z.string()
-    //.email("Invalid email address")
+    .email("Invalid email address")
     ),
   phone: z
     .optional(
     z.string()
-    //.refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number")
+    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number")
     )
     ,
   subject: z
@@ -117,4 +117,23 @@ export const PrayerFormValidation= z.object({
   subjectType: z
       .string()
       .optional()
+});
+
+
+export const rdvAvailabilitySchema = z.object({
+  id : z.number().optional(),
+  date: z.string().nonempty("Date is required"),
+  start_time: z.string().nonempty("Start time is required"),
+  end_time: z.string().nonempty("End time is required"),
+});
+
+export const rdvFormSchema = z.object({
+  rdv_availabilities: z.array(rdvAvailabilitySchema).min(1, "At least one availability is required"),
+  informations: z.string()
+});
+
+export const confirmRdvFormSchema = z.object({
+  date: z.string(),
+  time: z.string(),
+  informations: z.string()
 });

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import {jwtDecode} from 'jwt-decode';
 import { getAccessToken, getMe, isIntercesseurFunction, isResponsableFunction } from './auth';
 import { UserType } from '@/types/user';
+import { useRouter } from 'next/navigation';
 
 
   interface DecodeType {
@@ -30,6 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
     const [isIntercesseur, setIsIntercesseur] = useState(false);
     const [isResponsable, setIsResponsable] = useState(false);
+    const router = useRouter()
 
     useEffect(() => {
       setLoading(true);
@@ -107,6 +109,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('refresh_token');
       setUser(null);
       setDecode(null);
+      router.replace('/')
+
     };
   
     const value: AuthContextType = {

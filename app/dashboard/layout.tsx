@@ -13,9 +13,11 @@ export default function layout({children}: {children: React.ReactNode}) {
     }
   }, [auth?.user, auth?.loading]);
   return (
-      <div className=' mt-3 w-full min-h-screen flex flex-col sm:flex-row'>
-        <Navbar  />
-        {children}
-      </div>
+      <>
+        <div className=' mt-3 w-full min-h-screen flex flex-col sm:flex-row'>
+          <Navbar  />
+          {children}
+        </div>
+      </>
   )
 }

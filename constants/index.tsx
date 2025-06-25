@@ -1,4 +1,4 @@
-import { Calendar1, Church, CircleUserRound, NotebookPen, Settings } from "lucide-react"
+import { Calendar1, CalendarClock, Church, CircleUserRound, NotebookPen, Settings } from "lucide-react"
 
 export enum FormFieldType {
     INPUT = 'input',
@@ -84,6 +84,12 @@ export enum FormFieldType {
       name: 'Planing',
       href: '/dashboard/member/planing',
       icon: <NotebookPen color='gray' />
+    },
+    {
+      name: 'Rendez-vous',
+      href: '/dashboard/member/rdv',
+     
+      icon:  <CalendarClock color='gray' />
     },
     
   ])
