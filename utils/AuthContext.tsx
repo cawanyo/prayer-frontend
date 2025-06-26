@@ -95,6 +95,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
   
     const login = async (access: string, refresh: string) => {
+      setLoading(true);
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
       const decoded: any = jwtDecode(access);
@@ -102,6 +103,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(await getMe())
       setIsIntercesseur(await isIntercesseurFunction())
       setIsResponsable(await isResponsableFunction())
+      setLoading(false);
     }
   
     const logout = () => {

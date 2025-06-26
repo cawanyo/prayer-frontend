@@ -22,16 +22,16 @@ export default function RDVCalendarCell({
 
   useEffect(() => {
     const getRdv = async () => {
-      const rdv = await getUserRDVByDate({'date':fullDateKey})
-      if (rdv)
-        setRdv(rdv)
+      
+      const {success, data} = await getUserRDVByDate({'date':fullDateKey})
+      if (success)
+        setRdv(data)
 
-      console.log(rdv)
     } 
     getRdv()
   }, [])
 
-  const onStatusChange =  async (status: "available" | "unavailable") => {
+  const onStatusChange =  async () => {
 
     setSelectedDateKey(null);
   }
@@ -39,9 +39,9 @@ export default function RDVCalendarCell({
   const baseClasses = `w-full h-16 p-2 border text-sm flex flex-col items-center justify-center transition-all duration-300 ${
     !isCurrentMonth ? "text-gray-400 bg-gray-50" : "text-gray-800"
   } ${isSelected ? "ring-2 ring-blue-400" : ""} ${
-    status === "unavailable"
+    fullDateKey === "unavailable"
       ? "bg-red-100"
-      : status === "available"
+      : fullDateKey === "available"
       ? "bg-green-100"
       : "hover:bg-blue-50"
   }`;

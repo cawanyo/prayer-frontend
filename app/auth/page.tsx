@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {  useAuth } from "@/utils/AuthContext";
+import LoadingOverlay from "@/components/base/LoadingOverlay";
 
 const AuthPage = () => {
 
@@ -19,10 +20,13 @@ const AuthPage = () => {
 
   const [isLogin, setIsLogin] = useState(true);
 
-  const toggleMode = () => setIsLogin(!isLogin);
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setError("")
+  }
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | undefined>('');
   const  router = useRouter();
 
   useEffect( () => {
@@ -42,7 +46,7 @@ const AuthPage = () => {
   })
 
   const signUpForm = useForm<z.infer<typeof SignUpFormValidation>>({
-    mode: "onChange",
+    mode: "onBlur",
     resolver: zodResolver(SignUpFormValidation),
     defaultValues: {
       last_name: "",
@@ -64,7 +68,10 @@ const AuthPage = () => {
       auth?.login(res.data.access, res.data.refresh);
       router.push('/dashboard')
     } else {
-    }
+        setError(res.error);
+
+    } 
+    setIsLoading(false);
   }
 
   async function onSignUpSubmit(formData: z.infer<typeof SignUpFormValidation>){
@@ -93,11 +100,16 @@ const AuthPage = () => {
     } else {
      
     }
-
+    setIsLoading(false);
   }
 
   return (
     <div className="flex items-center justify-center px-4">
+      {
+        isLoading
+        &&
+        <LoadingOverlay />
+      }
       <div className={cn("bg-white rounded-xl mt-5 shadow-2xl w-full  p-6 space-y-4", isLogin? "max-w-md" : "md:w-2xl")}>
         <h1 className="text-xl font-bold text-center text-gray-800">
           {isLogin ? "Sign In" : "Create Account"}
@@ -109,6 +121,7 @@ const AuthPage = () => {
                 <form onSubmit={signInForm.handleSubmit(onSignInSubmit)} className="space-y-6 flex-1">   
                    
                     <SignInForm form={signInForm} />
+                    <p className="text-xs text-red-600 italic">{error}</p>
                     <SubmitButton text="Sign In" disabled={isLoading}/>
                 </form>
             </Form>   
@@ -119,7 +132,7 @@ const AuthPage = () => {
         <Form {...signUpForm} >
             <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-6 flex-1">   
                 <SignUpForm form={signUpForm} />   
-                <p>{error}</p>
+                <p className="text-xs text-red-600 italic">{error}</p>
                 <SubmitButton text="Sign Up" disabled={isLoading}/>
             </form>
         </Form>

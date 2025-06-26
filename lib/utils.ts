@@ -5,3 +5,5 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+
+export const api ='https://prayer-backend-j461.onrender.com/api'

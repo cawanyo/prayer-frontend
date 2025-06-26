@@ -6,16 +6,22 @@ import RDVForm from '@/components/responsable/rdv/RDVForm';
 import Calendar from '@/components/availability/Calendar';
 import RDVCalendarCell from '@/components/responsable/rdv/RDVCalendarCell';
 import { CalendarProvider } from '@/components/calendar/CalendarContext';
+import { RDVType } from '@/types/rdv';
 
 
 export default function CreateRDVPage() {
     const [rdvs, setRdvs] = useState<RDVType[]>([]);
+    const [a, setA] = useState()
     const [unValidatedRdvs, setUnValidatedRdvs] = useState<RDVType[]>([]);
     useEffect(() => {
         const rdv = async () => {
-            const rdvs: RDVType[] = await getUserRDV()
-            setRdvs(rdvs);
-            setUnValidatedRdvs(rdvs.filter((rdv) => rdv.state === "pending" ));
+            const {success, data} = await getUserRDV()
+            if (success){
+                const rdvData = data as RDVType[]
+                setRdvs(data);
+                setUnValidatedRdvs(rdvData.filter((rdv) => rdv.state === "pending" ));
+            }
+            
         }
         rdv();
     }, []);

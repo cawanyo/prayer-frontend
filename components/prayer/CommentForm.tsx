@@ -26,9 +26,12 @@ export default function CommentForm({prayer_id, setCommentId}: {prayer_id: numbe
         setIsLoading(true);
         setError("");
         if(auth?.user?.username){
-            const res = await submitComment({prayer_id: prayer_id, content:formData.content, submiter_name:auth.user.username});
-            setCommentId(res.id)
-            form.reset();
+            const {success ,data} = await submitComment({prayer_id: prayer_id, content:formData.content, submiter_name:auth.user.username});
+            if(success){
+              setCommentId(data.id)
+              form.reset();
+            }
+              
         }
       }
   return (
@@ -38,8 +41,8 @@ export default function CommentForm({prayer_id, setCommentId}: {prayer_id: numbe
           type={FormFieldType.INPUT}
           control={form.control}
           name="content"
-          disabled
         />
+        {error}
         <SubmitButton text='add' />
       </form>
     </Form>

@@ -24,9 +24,9 @@ export default function PlainCalendarCell({
     useEffect(()=>{
         const getProgram = async ()=> {
           
-            const prog = await getProgramFunction({date: fullDateKey})
-            if (prog)
-                setProgram(prog)
+            const {success, data} = await getProgramFunction({date: fullDateKey})
+            if (success)
+                setProgram(data)
         }
         getProgram();
     }, [])

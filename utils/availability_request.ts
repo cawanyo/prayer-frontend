@@ -1,9 +1,11 @@
+import { api } from "@/lib/utils";
+
 export const upsertAvailability = async ({date, state}: {date:string, state: boolean}) => {
     try{
     
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch(`http://127.0.0.1:8000/api/availability/${date}/upsert/`, {
+        const res = await fetch(`${api}/availability/${date}/upsert/`, {
         method: 'PATCH',
         body: JSON.stringify({
             'state': state
@@ -13,11 +15,14 @@ export const upsertAvailability = async ({date, state}: {date:string, state: boo
             Authorization: `Bearer ${token}`,
         },
         });
+        if(!res.ok)
+            throw new Error(res.statusText)
        
         const data = await res.json();
-        return data
+        return {success: true, data:data}
+
     } catch (error) {
-      return null;
+      return {success: true, data:null, error:error};
     }
   }
 
@@ -26,18 +31,20 @@ export const getAvailability = async ({date}: {date:string}) => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/availability/${date}/`, {
+        const res = await fetch(`${api}/availability/${date}/`, {
         method: 'GET',
     
         headers: {
             Authorization: `Bearer ${token}`,
         },
         });
-        
+        if(!res.ok)
+            throw new Error('Error')
+
         const data = await res.json();
-        return data
+        return {success: true, data:data}
     } catch (error) {
-      return null;
+      return {success: true, data:null, error:error};
     }
 }
 
@@ -45,7 +52,7 @@ export const getAvailableUsers = async ({date}: {date:string}) => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/availability/users/${date}/`, {
+        const res = await fetch(`${api}/availability/users/${date}/`, {
         method: 'GET',
     
         headers: {
@@ -54,8 +61,8 @@ export const getAvailableUsers = async ({date}: {date:string}) => {
         });
         
         const data = await res.json();
-        return data
+        return {success: true, data:data}
     } catch (error) {
-      return null;
+      return {success: false, data:null, error:error};
     }
 }

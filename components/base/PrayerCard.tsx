@@ -28,8 +28,8 @@ const PrayerCard: React.FC<PrayerCardProps> = ({ prayer }) => {
 
   useEffect(() => {
     const get = async () => {
-        const commentList = await getPrayerComment({'prayer_id': prayer.id})
-        setComments(commentList);
+        const {success, data} = await getPrayerComment({'prayer_id': prayer.id})
+        setComments(data);
     }
     get()
   }, [commentId])

@@ -1,10 +1,11 @@
+import { api } from "@/lib/utils";
 import { RestrictedRDVType } from "@/types/rdv";
 
 export const addRDV = async (rdv: RestrictedRDVType) => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/rdv/create/`, {
+        const res = await fetch(`${api}/rdv/create/`, {
         method: 'POST',
         body: JSON.stringify(rdv),
         headers: {
@@ -12,13 +13,13 @@ export const addRDV = async (rdv: RestrictedRDVType) => {
             Authorization: `Bearer ${token}`,
         },
         });
-        console.log(await res.json())
-        if (!res.ok) throw new Error("Failed to submit RDV");
+        if (!res.ok) 
+          throw new Error("Failed to submit RDV");
         const data = await res.json();
         
-        return data
+        return {success: true, data:data}
     } catch (error) {
-      return null;
+      return {success: false, data:null};
     }
   }
 
@@ -26,7 +27,7 @@ export const getUserRDV = async () => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/rdv/`, {
+        const res = await fetch(`${api}/rdv/`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -35,9 +36,9 @@ export const getUserRDV = async () => {
         if (!res.ok) throw new Error("Failed to Load RDV");
         const data = await res.json();
         
-        return data
+        return {success: true, data:data}
     } catch (error) {
-      return [];
+      return {success:true, data:[], error:error};
     }
 }
 
@@ -45,18 +46,19 @@ export const getUserRDVByDate = async ({date}: {date:string}) => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/rdv/date/2001-06-24`, {
+        const res = await fetch(`${api}/rdv/date/${date}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
         });
         
-        if (!res.ok) throw new Error("Failed to Load RDV");
+        if (!res.ok)
+           throw new Error("Failed to Load RDV");
         const data = await res.json();
         
-        return data
+        return {success:true, data:data}
     } catch (error) {
-      return [];
+      return {success:false, data:null};
     }
 }
 
@@ -65,7 +67,7 @@ export const updateRDV = async (rdv: RestrictedRDVType, id:number) => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/rdv/${id}/update/`, {
+        const res = await fetch(`${api}/rdv/${id}/update/`, {
         method: 'PATCH',
         body: JSON.stringify(rdv),
         headers: {
@@ -73,13 +75,12 @@ export const updateRDV = async (rdv: RestrictedRDVType, id:number) => {
             Authorization: `Bearer ${token}`,
         },
         });
-        console.log(await res.json())
         if (!res.ok) throw new Error("Failed to submit RDV");
         const data = await res.json();
         
-        return data
+        return {success: true, data:data}
     } catch (error) {
-      return null;
+      return {success:false, data:null, error:error};
     }
   }
 
@@ -87,20 +88,20 @@ export const updateRDV = async (rdv: RestrictedRDVType, id:number) => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/rdv/availability/${id}/`, {
+        const res = await fetch(`${api}/rdv/availability/${id}/`, {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
         });
-        console.log(await res.json())
+
         if (!res.ok) throw new Error("Failed to submit RDV");
         const data = await res.json();
         
-        return data
+        return {success: true, data:data}
     } catch (error) {
-      return null;
+      return {success: false, data:null, error:error};
     }
   }
 
@@ -108,7 +109,7 @@ export const updateRDV = async (rdv: RestrictedRDVType, id:number) => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/rdv/delete/${id}/`, {
+        const res = await fetch(`${api}/rdv/delete/${id}/`, {
         method: 'DELETE',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -118,9 +119,9 @@ export const updateRDV = async (rdv: RestrictedRDVType, id:number) => {
         if (!res.ok) throw new Error("Failed to submit RDV");
         const data = await res.json();
         
-        return data
+        return {success: true, data:data}
     } catch (error) {
-      return null;
+      return {success: false, data:null, error:error};
     }
   }
 
@@ -129,7 +130,7 @@ export const updateRDV = async (rdv: RestrictedRDVType, id:number) => {
     try{
     
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/rdv/all/`, {
+        const res = await fetch(`${api}/rdv/all/`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -139,9 +140,9 @@ export const updateRDV = async (rdv: RestrictedRDVType, id:number) => {
         const data = await res.json();
         
         
-        return data
+        return {success: true, data:data};
     } catch (error) {
       console.log('error')
-      return [];
+      return {success: false, data:[], error:error};;
     }
 }

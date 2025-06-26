@@ -15,11 +15,14 @@ export default function page() {
   const [allRdv, setAllRdv] = useState<RDVType[]>([])
   useEffect(() => {
     const get = async() => {
-      const demandList = await getDemandList();
-      setDemandList(demandList.filter((demand: UserDemandType)=>demand.state=="pending"));
-      const rdvList = await getAllRDV();
-      setAllRdv(rdvList);
-      console.log(allRdv.length)
+
+      const {success: successDemand, data: demandList} = await getDemandList();
+      if(successDemand)
+        setDemandList(demandList.filter((demand: UserDemandType)=>demand.state=="pending"));
+
+      const {success: successRdv, data: rdvList} = await getAllRDV();
+      if(successRdv)
+        setAllRdv(rdvList);
     }
     get();
   }, [])

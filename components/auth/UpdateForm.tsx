@@ -12,7 +12,6 @@ type FormValues = {
   };
 
 export default function UpdateForm({form, disabled}: {form: UseFormReturn<FormValues>, disabled:boolean}) {
-  console.log(disabled)
   return (
     <div className="md:w-lg">
         <CustomFormField 

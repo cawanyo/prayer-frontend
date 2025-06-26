@@ -1,30 +1,39 @@
+import { api } from "@/lib/utils";
 
 
 
 export const loginUser = async (credentials: { username: string; password: string }) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/accounts/token/', {
+      const response = await fetch(`${api}/accounts/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
       });
   
-      const data = await response.json();
-      console.log(data)
+
       if (!response.ok) {
-        throw new Error(data || 'Login failed');
+        if(response.status == 401)
+          throw new Error("Incorrect Password")
+        throw new Error("Login failed");
       }
+      const data = await response.json();
       return { success: true, data: data };
 
-    } catch (error) {
-      return { success: false, error: error };
+    } catch (error: unknown) {
+      let errorMessage = "An unknown error occurred";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      return { success: false, error: errorMessage };
     }
   };
 
 
   export const createUser = async (credentials: { username: string; password: string, first_name: string, last_name:string, phone?:string, email:string }) => {
     try{
-        const response = await fetch("http://127.0.0.1:8000/api/accounts/register/", {
+        const response = await fetch(`${api}/accounts/register/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
@@ -32,7 +41,7 @@ export const loginUser = async (credentials: { username: string; password: strin
 
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(data || 'SignUp failed');
+            throw new Error(response.statusText || 'SignUp failed');
         }  
         return { success: true, data:data};
 
@@ -46,7 +55,7 @@ export const loginUser = async (credentials: { username: string; password: strin
     
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch('http://127.0.0.1:8000/api/accounts/me/update/', {
+        const res = await fetch(`${api}/accounts/me/update/`, {
           method: "PATCH",
         headers: {
           "Content-Type": "application/json" ,
@@ -73,7 +82,7 @@ export const loginUser = async (credentials: { username: string; password: strin
     
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch('http://127.0.0.1:8000/api/accounts/me/', {
+        const res = await fetch(`${api}/accounts/me/`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -90,7 +99,7 @@ export const loginUser = async (credentials: { username: string; password: strin
 
   export const getAccessToken = async ({refresh}: {refresh: string}) => {
     try{
-        const res = await fetch("http://127.0.0.1:8000/api/accounts/token/refresh/", {
+        const res = await fetch(`${api}/accounts/token/refresh/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refresh }),
@@ -112,7 +121,7 @@ export const loginUser = async (credentials: { username: string; password: strin
 
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch('http://127.0.0.1:8000/api/accounts/is-intercesseur/', {
+        const res = await fetch(`${api}/accounts/is-intercesseur/`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -135,7 +144,7 @@ export const loginUser = async (credentials: { username: string; password: strin
 
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch('http://127.0.0.1:8000/api/accounts/is-responsable/', {
+        const res = await fetch(`${api}/accounts/is-responsable/`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -160,7 +169,7 @@ export const loginUser = async (credentials: { username: string; password: strin
 
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch('http://127.0.0.1:8000/api/accounts/demands/', {
+        const res = await fetch(`${api}/accounts/demands/`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -168,13 +177,13 @@ export const loginUser = async (credentials: { username: string; password: strin
         });
 
         if (!res.ok) {
-          throw new Error("Failed to refresh access token");
+          throw new Error("Failed to ask ");
         }
 
         const data = await res.json();
-        return data;
+        return {success: true, data:data};
     } catch (error) {
-      return null;
+      return {success: true, error: error};
     }
   }
 
@@ -183,7 +192,7 @@ export const loginUser = async (credentials: { username: string; password: strin
 
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch('http://127.0.0.1:8000/api/accounts/list-demands/', {
+        const res = await fetch(`${api}/accounts/list-demands/`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -194,10 +203,9 @@ export const loginUser = async (credentials: { username: string; password: strin
         }
 
         const data = await res.json();
-        console.log(data)
-        return data;
+        return {success: true, data:data};
     } catch (error) {
-      return null;
+      return {success: false, data:null, error:error};
     }
   }
 
@@ -205,8 +213,7 @@ export const loginUser = async (credentials: { username: string; password: strin
     try{
 
         const token = localStorage.getItem('access_token');
-        console.log(demand)
-        const res = await fetch(`http://127.0.0.1:8000/api/accounts/demands/${demand.id}/`, {
+        const res = await fetch(`${api}/accounts/demands/${demand.id}/`, {
           method:'PATCH',
           headers: {
              "Content-Type": "application/json" ,
@@ -220,7 +227,6 @@ export const loginUser = async (credentials: { username: string; password: strin
         }
 
         const data = await res.json();
-        console.log(data)
         return data;
     } catch (error) {
       return null;
@@ -232,7 +238,7 @@ export const loginUser = async (credentials: { username: string; password: strin
 
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch('http://127.0.0.1:8000/api/accounts/demands/status', {
+        const res = await fetch(`${api}/accounts/demands/status`, {
         method: 'GET',
         headers: {
             Authorization: `Bearer ${token}`,

@@ -11,8 +11,9 @@ const PrayerDashboard = () => {
   
   useEffect(() => {
     const get = async() => {
-      const prayerList = await allPrayers();
-      setPrayers(prayerList);
+      const {success, data} = await allPrayers();
+      if(success)
+        setPrayers(data);
     }
     get();
   }, [])

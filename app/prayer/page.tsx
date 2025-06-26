@@ -1,7 +1,5 @@
 import React from 'react'
-import Header from "@/components/base/Header";
 import PrayerForm from '@/components/prayer/PrayerForm';
-import Footer from '@/components/base/Footer';
 
 export default function page() {
   return (

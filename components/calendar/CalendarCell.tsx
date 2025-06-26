@@ -3,6 +3,7 @@ import { format, isSameMonth } from "date-fns";
 import { useCalendar } from "./CalendarContext";
 import { useEffect, useState } from "react";
 import { getAvailability, upsertAvailability } from "@/utils/availability_request";
+import LoadingOverlay from "../base/LoadingOverlay";
 
 interface Props {
   day: Date;
@@ -19,19 +20,23 @@ export default function CalendarCell({
   const isCurrentMonth = isSameMonth(day, currentDate);
   const dateNum = format(day, "d");
   const [status, setStatus] = useState<"available"|"unavailable"| null>(null)
+  const [loading, setLoading] = useState(true)
+
 
   useEffect(() => {
     const getState = async () => {
-      const res = await getAvailability({'date':fullDateKey})
-      if (res.state != null)
-        setStatus(res.state? "available": "unavailable")
+      const {success, data} = await getAvailability({'date':fullDateKey})
+      if (success &&  data.state != null)
+        setStatus(data.state? "available": "unavailable");
+
+      setLoading(false);
     } 
     getState()
   }, [])
 
   const onStatusChange =  async (status: "available" | "unavailable") => {
-    const res = await upsertAvailability({'date': fullDateKey, state: status === "available" })
-    if (res)
+    const {success, data} = await upsertAvailability({'date': fullDateKey, state: status === "available" })
+    if (success)
       setStatus(status)
     setSelectedDateKey(null);
   }
@@ -51,6 +56,10 @@ export default function CalendarCell({
       e.stopPropagation();
       setSelectedDateKey(fullDateKey);
     }}>
+      {/* {loading
+        &&
+        <LoadingOverlay />
+      } */}
       {isSelected ? (
         <div className="flex flex-col gap-1 mt-1 w-full">
           <button

@@ -44,7 +44,7 @@ export default function Priere() {
 
     setIsLoading(true);
     setError("");
-    const data = await addPrrayerFunction({
+    const response = await addPrrayerFunction({
       content: formData.subject,
       submission_date: "",
       state: "pending",
@@ -52,7 +52,7 @@ export default function Priere() {
       user: auth?.user as UserType,
       id: 0
     })
-    if(data)
+    if(response.success)
       router.push("/prayer/success");
 
   }

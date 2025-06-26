@@ -1,5 +1,6 @@
 'use client'
 
+import LoadingOverlay from "@/components/base/LoadingOverlay";
 import { Button } from "@/components/ui/button";
 import ProfileUpdate from "@/components/user/ProfileUpdate";
 import { UserDemandType } from "@/types/user";
@@ -27,22 +28,32 @@ const UserProfile = () => {
   const auth = useAuth();
   const [demand, setDemand] = useState<UserDemandType | null>(null);
   const [disableUpdate, setDisableUpdate] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(()=> {
     const load = async () => {
       setDemand(await getDemandStatus())
+      setLoading(false)
     }
     load()
+
   }, [])
   const demandIntercesseur = async () => {
     // TODO: implement API request
-    const demand = await askMember()
-    if(demand)
+    setLoading(true)
+    const {success, data}  = await askMember()
+    if(success)
       setDemand(demand)
+
+    setLoading(false)
   };
 
   return (
     <div className="w-full mx-auto mt-12 px-4 sm:px-6 lg:px-8">
+
+      {
+        loading && <LoadingOverlay />
+      }
       <div className="bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
         <div className="flex flex-col items-center sm:flex-row sm:items-center  sm:space-x-6">
           {/* Avatar */}

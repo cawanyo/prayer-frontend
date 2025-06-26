@@ -29,8 +29,8 @@ export default function PlaningForm({day, setOpen, program, setProgram}: props) 
 
     useEffect(()=>{
         const getUsers = async () => {
-            const users = await getAvailableUsers({date:fullDateKey})
-            if (users)
+            const {success, data:users} = await getAvailableUsers({date:fullDateKey})
+            if (success)
                 setAvailableUser(users)
         }
         getUsers()
@@ -47,14 +47,14 @@ export default function PlaningForm({day, setOpen, program, setProgram}: props) 
     const onSubmit = async (formData: z.infer<typeof ProgramValidation>) => {
         try {
             
-            const program = await addProgramm({
+            const {success, data:program }= await addProgramm({
                 person: formData.person? JSON.parse(formData.person as string) : null,
                 name: formData.name,
                 date: fullDateKey,
                 start_time: formData.start_time,
                 end_time: formData.end_time
             });
-            if (program)
+            if (success)
                 setProgram(program)
             setOpen(false)
             

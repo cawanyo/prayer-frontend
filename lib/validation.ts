@@ -1,15 +1,15 @@
 import { string, z } from "zod";
+import { api } from "./utils";
 
 const usernameAvailable = async (username: string) => {
-  const res = await fetch(`http://127.0.0.1:8000/api/accounts/check-username/?username=${username}`);
+  const res = await fetch(`${api}/accounts/check-username/?username=${username}`);
   if (!res.ok) return false;
-  console.log(res)
   const data = await res.json();
   return data.available;
 };
 
 const emailAvailable = async (email: string): Promise<boolean> => {
-  const res = await fetch(`http://127.0.0.1:8000/api/accounts/check-email/?email=${encodeURIComponent(email)}`);
+  const res = await fetch(`${api}/accounts/check-email/?email=${encodeURIComponent(email)}`);
   if (!res.ok) return false;
   const data = await res.json();
   return data.available;

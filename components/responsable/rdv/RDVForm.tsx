@@ -40,12 +40,12 @@ export default function RDVForm({update, rdv}:props) {
   const onSubmit = async (data: FormData) => {
    setLoading(true);
    const add = async () => {
-    const rdv = await addRDV({
+    const {success, data:rdv} = await addRDV({
       rdv_availabilities: data.rdv_availabilities ,
       informations: data.informations? data.informations : ''
   })
 
-     if(rdv)
+     if(success)
        toast.success("RDV successfully submitted");
      setLoading(false);
      form.reset()

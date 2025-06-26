@@ -10,6 +10,7 @@ import SubmitButton from '../form/SubmitButton';
 import { Button } from '../ui/button';
 import { UserType } from '@/types/user';
 import { updateMe } from '@/utils/auth';
+import LoadingOverlay from '../base/LoadingOverlay';
 
 interface props {
     disabled: boolean,
@@ -44,9 +45,13 @@ export default function ProfileUpdate({disabled, setDisabled, user}: props) {
           phone: formData.phone
         })
         setDisabled(true);
+        setIsLoading(false)
     }
   return (
     <div className='bg-white rounded-2xl shadow-2xl border-gray-100 p-5 my-5'>
+        {
+          isLoading && <LoadingOverlay />
+        }
        <Form {...updateForm} >
             <form onSubmit={updateForm.handleSubmit(onSignUpSubmit)} className="space-y-6 flex-1 max-w-2xl m-auto">   
                 <UpdateForm form={updateForm} disabled={disabled} />  

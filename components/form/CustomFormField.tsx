@@ -50,8 +50,8 @@ const RenderInput = ({field, props} : {field:any, props: CustomProps}) => {
                         <Image 
                             src={props.iconSrc}
                             alt={props.iconAlt || 'icon'}
-                            width={24}
                             height={24}
+                            width={24}
                             className='mx-2'
                             
                         />
