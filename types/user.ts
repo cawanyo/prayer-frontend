@@ -10,8 +10,8 @@ export interface UserType {
 export type DemandStateType = "pending" | "accepted" | "refused"
 
 export interface UserDemandType {
-  requester:  UserType, 
+  requester?:  UserType, 
   submitted_at: string,
-  validate_by:  UserType,
+  validate_by?:  UserType,
   state: DemandStateType
 }

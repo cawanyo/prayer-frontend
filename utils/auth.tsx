@@ -183,7 +183,7 @@ export const loginUser = async (credentials: { username: string; password: strin
         const data = await res.json();
         return {success: true, data:data};
     } catch (error) {
-      return {success: true, error: error};
+      return {success: false, error: error};
     }
   }
 

@@ -24,11 +24,14 @@ const statusLabel = {
   refused: '❌ Refusée',
 };
 
+
+
 const UserProfile = () => {
   const auth = useAuth();
   const [demand, setDemand] = useState<UserDemandType | null>(null);
   const [disableUpdate, setDisableUpdate] = useState(true);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(()=> {
     const load = async () => {
@@ -43,8 +46,7 @@ const UserProfile = () => {
     setLoading(true)
     const {success, data}  = await askMember()
     if(success)
-      setDemand(demand)
-
+      setDemand(data)
     setLoading(false)
   };
 
@@ -74,6 +76,11 @@ const UserProfile = () => {
 
 
       <div className="my-5 p-5 bg-white rounded-2xl shadow-2xl border-gray-100">
+        {
+          loading 
+          &&
+          <LoadingOverlay />
+        }
         {/* Intercessor Status */}
         {auth?.isIntercesseur?
         (
@@ -99,7 +106,7 @@ const UserProfile = () => {
               Faire une demande pour intégrer l'intercession
             </p>
             <Button
-              onClick={demandIntercesseur}
+              onClick={() => demandIntercesseur()}
               className="bg-gray-600 text-xs md:text-base"
             >
               Soumettre
