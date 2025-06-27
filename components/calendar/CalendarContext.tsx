@@ -13,33 +13,47 @@ interface CalendarContextType {
   selectedDateKey: string | null;
   setSelectedDateKey: (dateKey: string | null) => void;
   data: any,
-  setData: (d:any) => void
+  setData: (d:any) => void,
+  loading: boolean,
+  setLoading: (l:boolean) => void
 }
 
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
 
+interface props<T> { 
+  children: React.ReactNode, 
+  fullData?: T[]
+}
 
-export const CalendarProvider = ({ children }: { children: React.ReactNode }) => {
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
-    const [data, setData] = useState<any>(null);
-  
-    return (
-      <CalendarContext.Provider
-        value={{
-          currentDate,
-          setCurrentDate,
-          selectedDateKey,
-          setSelectedDateKey,
-          data,
-          setData
-        }}
-      >
-        {children}
-      </CalendarContext.Provider>
-    );
-  };
+export function CalendarProvider<T>({ children, fullData }: props<T>) {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
+  const [data, setData] = useState<T[] | undefined>(fullData? fullData : []);
+  const [loading, setLoading] = useState<boolean>(true)
+  useEffect(() => {
+    setLoading(true);
+    setData(fullData);
+    setLoading(false);
+  }, [fullData])
+
+  return (
+    <CalendarContext.Provider
+      value={{
+        currentDate,
+        setCurrentDate,
+        selectedDateKey,
+        setSelectedDateKey,
+        data,
+        setData,
+        loading,
+        setLoading
+      }}
+    >
+      {children}
+    </CalendarContext.Provider>
+  );
+}
   
   export const useCalendar = () => {
     const context = useContext(CalendarContext);

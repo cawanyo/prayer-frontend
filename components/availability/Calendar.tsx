@@ -11,20 +11,21 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 
-type CalendarProps = {
-  children: (day: Date) => React.ReactNode;  // This is your render prop
+type CalendarProps<T> = {
+  children: (day: Date) => React.ReactNode; 
+  data? : T[]
 };
 
-const Calendar = ({children}: CalendarProps) => {
+function Calendar<T>({children, data}: CalendarProps<T>) {
   const [calendarFormat, setCalendarFormat] = useState<"month"|"week">("week")
-  const calendarContext = useCalendar()
+  const calendarContext = useCalendar();
 
-    const handleDatePickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const parsed = parse(e.target.value, "yyyy-MM-dd", new Date());
-    if (!isNaN(parsed.getTime())) {
-      calendarContext.setCurrentDate(parsed);
-      calendarContext.setSelectedDateKey(format(parsed, "yyyy-MM-dd"));
-    }
+  const handleDatePickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const parsed = parse(e.target.value, "yyyy-MM-dd", new Date());
+  if (!isNaN(parsed.getTime())) {
+    calendarContext.setCurrentDate(parsed);
+    calendarContext.setSelectedDateKey(format(parsed, "yyyy-MM-dd"));
+  }
   };
 
   useEffect(() => {

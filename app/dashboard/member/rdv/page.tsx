@@ -11,7 +11,6 @@ import { RDVType } from '@/types/rdv';
 
 export default function CreateRDVPage() {
     const [rdvs, setRdvs] = useState<RDVType[]>([]);
-    const [a, setA] = useState()
     const [unValidatedRdvs, setUnValidatedRdvs] = useState<RDVType[]>([]);
     useEffect(() => {
         const rdv = async () => {
@@ -19,17 +18,19 @@ export default function CreateRDVPage() {
             if (success){
                 const rdvData = data as RDVType[]
                 setRdvs(data);
-                setUnValidatedRdvs(rdvData.filter((rdv) => rdv.state === "pending" ));
             }
-            
         }
         rdv();
     }, []);
+    
+    useEffect(() => {
+        setUnValidatedRdvs(rdvs.filter((rdv) => rdv.state === "pending" ))
+    }, [rdvs])
   return (
-    <CalendarProvider>
+    <CalendarProvider<RDVType> fullData={rdvs}>
         <div>
             <div className=' m-3 grid gap-3 lg:grid-cols-2'>
-                <RDVForm />
+                <RDVForm  rdvs={rdvs} setRdvs={setRdvs}/>
                 <div className=''>
                     <h1 className="text-2xl font-semibold mb-6">Vos rendez-vous validés</h1>
 
@@ -44,7 +45,7 @@ export default function CreateRDVPage() {
             <h1 className="text-xl font-semibold m-5 md:text-3xl">Vos rendez-vous pas encore validés</h1>
             <div className=' m-3 grid grid-cols-1 gap-3 lg:grid-cols-2'>
                 {
-                    unValidatedRdvs.map((rdv, index) => <RDVForm update={true} rdv={rdv} key={index}/>)
+                    unValidatedRdvs.map((rdv, index) => <RDVForm update={true} rdv={rdv} key={index} rdvs={rdvs} setRdvs={setRdvs}/>)
                 }
             </div>
             

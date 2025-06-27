@@ -19,7 +19,7 @@ interface props {
     day:Date, 
     setOpen: (open:boolean) => void,
     program?: ProgramType | null ,
-    setProgram: (program: ProgramType) => void
+    setProgram: (program: ProgramType) => void,
 }
 
 export default function PlaningForm({day, setOpen, program, setProgram}: props) {
@@ -123,7 +123,12 @@ export default function PlaningForm({day, setOpen, program, setProgram}: props) 
               disabled={isLoading}
               className="bg-blue-600 text-white px-6 py-2 rounded-md shadow hover:bg-blue-700"
             >
-              Add Program
+              {
+                program?
+                'Update Program':
+                'Add Program'
+              }
+              
             </button>
           </div>
       </form>

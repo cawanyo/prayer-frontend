@@ -66,3 +66,24 @@ export const getAvailableUsers = async ({date}: {date:string}) => {
       return {success: false, data:null, error:error};
     }
 }
+
+export const getAvailabilityByMonth = async ({year, month}: {year:number, month:number}) => {
+    try{
+    
+        const token = localStorage.getItem('access_token');
+        const res = await fetch(`${api}/availability/${year}/${month}/`, {
+        method: 'GET',
+    
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        });
+        if(!res.ok)
+            throw new Error(res.statusText)
+
+        const data = await res.json();
+        return {success: true, data:data}
+    } catch (error) {
+      return {success: false, data:null, error:error};
+    }
+}

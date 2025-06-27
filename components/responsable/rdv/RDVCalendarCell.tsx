@@ -19,25 +19,20 @@ export default function RDVCalendarCell({
   const isCurrentMonth = isSameMonth(day, currentDate);
   const dateNum = format(day, "d");
   const [rdv, setRdv] = useState<RDVType|null>(null)
-
+  const calendarContext = useCalendar();
   useEffect(() => {
-    const getRdv = async () => {
-      
-      const {success, data} = await getUserRDVByDate({'date':fullDateKey})
-      if (success)
-        setRdv(data)
-
-    } 
-    getRdv()
-  }, [])
+    const rdvs:RDVType[] = calendarContext.data
+    const result = rdvs.find(rdv => rdv.date === fullDateKey);
+    if(result)
+      console.log("")
+  }, [calendarContext.data])
 
   const onStatusChange =  async () => {
 
     setSelectedDateKey(null);
   }
 
-  const baseClasses = `w-full h-16 p-2 border text-sm flex flex-col items-center justify-center transition-all duration-300 ${
-    !isCurrentMonth ? "text-gray-400 bg-gray-50" : "text-gray-800"
+  const baseClasses = `w-full h-16 p-2 border text-sm flex flex-col items-center justify-center transition-all duration-300 
   } ${isSelected ? "ring-2 ring-blue-400" : ""} ${
     fullDateKey === "unavailable"
       ? "bg-red-100"

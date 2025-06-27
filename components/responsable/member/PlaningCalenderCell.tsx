@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import PlaningModal from "../planing/Modal";
 import { cn } from "@/lib/utils";
 import { Circle } from "lucide-react";
+import { useCalendar } from "@/components/calendar/CalendarContext";
 
 type Props = {
   day: Date;
@@ -19,17 +20,16 @@ export default function PlainCalendarCell({
     const auth = useAuth();
     const [program, setProgram] = useState<ProgramType|null>(null);
     const fullDateKey = format(day, "yyyy-MM-dd");
+    const calendarContext = useCalendar();
     const [open, setOpen] = useState(false);
     const colorList = ['bg-yellow-100', 'bg-red-100', 'bg-green-100'];
-    useEffect(()=>{
-        const getProgram = async ()=> {
-          
-            const {success, data} = await getProgramFunction({date: fullDateKey})
-            if (success)
-                setProgram(data)
-        }
-        getProgram();
-    }, [])
+
+    useEffect(() => {
+      const programs:ProgramType[] = calendarContext.data
+      const result = programs.find(program => program.date === fullDateKey);
+      if(result)
+        setProgram(result)
+    }, [calendarContext.data])
 
     const onClick = () => {
       if (auth?.isResponsable){

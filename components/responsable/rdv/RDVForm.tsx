@@ -13,15 +13,18 @@ import { FormFieldType } from '@/constants';
 import { addRDV, deleteAvailability, deleteRDV, updateRDV} from '@/utils/rdv';
 import { Trash } from 'lucide-react';
 import { RDVType } from '@/types/rdv';
+import LoadingOverlay from '@/components/base/LoadingOverlay';
 
 type FormData = z.infer<typeof rdvFormSchema>;
 
 interface props {
     update?: boolean,
     rdv?: RDVType,
+    setRdvs?: (a:RDVType[]) => void;
+    rdvs?: RDVType[]
 }
 
-export default function RDVForm({update, rdv}:props) {
+export default function RDVForm({update, rdv, setRdvs, rdvs}:props) {
     const [disabled, setDisabled] = useState(update);
   const form = useForm<FormData>({
     resolver: zodResolver(rdvFormSchema),
@@ -44,9 +47,17 @@ export default function RDVForm({update, rdv}:props) {
       rdv_availabilities: data.rdv_availabilities ,
       informations: data.informations? data.informations : ''
   })
+    
 
-     if(success)
-       toast.success("RDV successfully submitted");
+     if(success){
+      toast.success("RDV successfully submitted");
+      
+      
+    if (setRdvs && rdvs){
+      setRdvs([...rdvs, rdv])
+    }
+        
+     }
      setLoading(false);
      form.reset()
    }
@@ -83,9 +94,15 @@ export default function RDVForm({update, rdv}:props) {
     }
 
   const onDeleteRdv = async () => {
+    setLoading(true)
     if(rdv){
       const out = deleteRDV(rdv?.id)
+      if (setRdvs && rdvs) {
+        const updatedList = rdvs.filter(item => item.id !== rdv.id);
+        setRdvs(updatedList);
+      }
     }
+    setLoading(false)
      
   }
 
@@ -93,6 +110,11 @@ export default function RDVForm({update, rdv}:props) {
   return (
 
     <div className="max-w-3xl max-h-[600px] overflow-scroll mx-auto mt-10 p-6 bg-white rounded-lg shadow">
+      {
+        loading
+        &&
+        <LoadingOverlay />
+      }
       <div className='flex justify-between'>
         <h1 className="text-2xl font-semibold mb-6">{update? 'Mettre à jour le Rdv' : 'Créer un RDV'}</h1>
         {rdv &&<Button onClick={() => onDeleteRdv()} className='bg-gray-100'><Trash color='red'/></Button>}

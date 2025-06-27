@@ -1,9 +1,10 @@
 import { CheckCircle, XCircle } from "lucide-react";
 import { format, isSameMonth } from "date-fns";
 import { useCalendar } from "./CalendarContext";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getAvailability, upsertAvailability } from "@/utils/availability_request";
 import LoadingOverlay from "../base/LoadingOverlay";
+import { AvailabilityType } from "@/types/availability";
 
 interface Props {
   day: Date;
@@ -20,19 +21,16 @@ export default function CalendarCell({
   const isCurrentMonth = isSameMonth(day, currentDate);
   const dateNum = format(day, "d");
   const [status, setStatus] = useState<"available"|"unavailable"| null>(null)
-  const [loading, setLoading] = useState(true)
+  const calendarContext = useCalendar()
+
 
 
   useEffect(() => {
-    const getState = async () => {
-      const {success, data} = await getAvailability({'date':fullDateKey})
-      if (success &&  data.state != null)
-        setStatus(data.state? "available": "unavailable");
-
-      setLoading(false);
-    } 
-    getState()
-  }, [])
+    const availabilities:AvailabilityType[] = calendarContext.data
+    const result = availabilities.find(availability => availability.date === fullDateKey);
+    if(result)
+      setStatus(result.state? "available": "unavailable")
+  }, [calendarContext.data])
 
   const onStatusChange =  async (status: "available" | "unavailable") => {
     const {success, data} = await upsertAvailability({'date': fullDateKey, state: status === "available" })
