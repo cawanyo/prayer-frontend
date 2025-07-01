@@ -10,22 +10,17 @@ import { useEffect, useState } from 'react';
 
 export default function page() {
   const [data, setData] = useState<AvailabilityType[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const getData = async (date:Date) => {
+    const {success, data} = await getAvailabilityByMonth({year:date.getFullYear(), month:date.getMonth()+1})
+    if(success)
+      return data
+    return []
+  }
   useEffect(()=>{
-    const getAvailabilities = async ()=> {
 
-        const date = new Date()
-
-        const {success, data} = await getAvailabilityByMonth({year:date.getFullYear(), month:date.getMonth()+1})
-
-        if (success)
-            setData(data)
-        
-        setLoading(false)
-        console.log(data)
-    }
-    getAvailabilities();
-}, [])
+  }, 
+  [])
   return (
     <div className=' flex flex-1'>
       {
@@ -33,7 +28,7 @@ export default function page() {
         &&
         <LoadingOverlay />
       }
-      <CalendarProvider<AvailabilityType> fullData={data}>
+      <CalendarProvider<AvailabilityType> getData={getData}>
         <Calendar >
           {(day) => (
             <CalendarCell key={day.toString()} day={day} />

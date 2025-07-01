@@ -2,12 +2,27 @@ import { api } from "@/lib/utils";
 import { PrayerRequestType } from "@/types/prayer";
 import { _success } from "zod/v4/core";
 
-export const allPrayers = async () => {
-  try{
+export const allPrayers = async ({
+  page = 1,
+  ordering = "-submitted_at",
+  state,
+}: {
+  page?: number;
+  ordering?: string;
+  state?: string;
+}) => 
   
+  {
+  try{
       const token = localStorage.getItem('access_token');
+      const params = new URLSearchParams({
+        page: page.toString(),
+        ordering,
+      });
 
-      const res = await fetch(`${api}/prayers/list`, {
+      if (state) params.append("state", state);
+
+      const res = await fetch(`${api}/prayers/list/?${params.toString()}`, {
       headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -15,8 +30,8 @@ export const allPrayers = async () => {
       if(!res.ok)
         throw new Error(res.statusText)
 
-      const prayers = await res.json();
-      return {success:true, data:prayers}
+      const data = await res.json()
+      return {success:true, data:data}
   } catch (error) {
     return {_success:false, data:[], error:error};
   }
@@ -46,28 +61,44 @@ export const addPrrayerFunction = async (prayer:  PrayerRequestType) => {
   } 
 
 }
-export const getMyPrayers = async () => {
+
+
+export const getMyPrayers = async ({
+  page = 1,
+  ordering = "-submission_date",
+  state,
+}: {
+  page?: number;
+  ordering?: string;
+  state?: string;
+}) => {
     try{
-    
+      
+      const params = new URLSearchParams({
+        page: page.toString(),
+        ordering,
+      });
+      if (state) params.append("state", state);
+
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch(`${api}/prayers/me/`, {
+        const res = await fetch(`${api}/prayers/me/?${params.toString()}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
         });
-
         if(!res.ok){
           throw new Error(res.statusText)
         }
-       
-        const prayers = await res.json();
         
-        return {success: true, data:prayers}
+        const data = await res.json();
+        return {success: true, data:data}
+
     } catch (error) {
       return {success:false, data:[]};
     }
-  }
+}
+
 
 
   export const getPrayerComment= async ({prayer_id}: {prayer_id:number}) => {

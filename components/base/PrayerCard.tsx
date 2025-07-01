@@ -37,7 +37,7 @@ const PrayerCard: React.FC<PrayerCardProps> = ({ prayer }) => {
   const handleAdd = () => {
   };
 
-
+  
   const formattedDate = new Date(prayer.submission_date).toLocaleDateString();
 
   return (

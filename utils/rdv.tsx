@@ -35,8 +35,7 @@ export const getUserRDV = async () => {
         
         if (!res.ok) throw new Error("Failed to Load RDV");
         const data = await res.json();
-        
-        return {success: true, data:data}
+        return {success: true, data:data.results}
     } catch (error) {
       return {success:true, data:[], error:error};
     }

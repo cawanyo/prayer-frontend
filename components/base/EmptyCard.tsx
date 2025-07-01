@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { CheckCircle, Send, Clock, MessageCircle, ChevronDown, ChevronUp, XCircle, Pyramid, Check, Plus } from "lucide-react";
-import { AnyARecord } from "dns";
-import { getPrayerComment, updatePrayerState } from "@/utils/prayer_requests";
-import CommentForm from "../prayer/CommentForm";
-import { CommentType, PrayerRequestType, PrayerStateType } from "@/types/prayer";
+'use client'
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 

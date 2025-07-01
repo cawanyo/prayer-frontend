@@ -187,12 +187,25 @@ export const loginUser = async (credentials: { username: string; password: strin
     }
   }
 
-  export const getDemandList = async () => {
+  export const getDemandList = async ({
+    page = 1,
+    state,
+  }: {
+    page?: number;
+    state?: string;
+  }) => {
+
+    const params = new URLSearchParams({
+      page: page.toString(),
+    });
+
+    if (state) params.append("state", state);
+
     try{
 
         const token = localStorage.getItem('access_token');
 
-        const res = await fetch(`${api}/accounts/list-demands/`, {
+        const res = await fetch(`${api}/accounts/list-demands/?${params.toString()}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },

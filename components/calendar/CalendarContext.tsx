@@ -23,19 +23,27 @@ const CalendarContext = createContext<CalendarContextType | undefined>(undefined
 
 interface props<T> { 
   children: React.ReactNode, 
-  fullData?: T[]
+  fullData?: T[],
+  getData?:  (d:Date) => Promise<T[]>
 }
 
-export function CalendarProvider<T>({ children, fullData }: props<T>) {
+export function CalendarProvider<T>({ children, fullData, getData }: props<T>) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
   const [data, setData] = useState<T[] | undefined>(fullData? fullData : []);
   const [loading, setLoading] = useState<boolean>(true)
   useEffect(() => {
     setLoading(true);
-    setData(fullData);
+    const start = async () => {
+      if (getData){
+        setData(await getData(currentDate));
+        console.log("qvsdf")
+      }
+        
+    }
+    start()
     setLoading(false);
-  }, [fullData])
+  }, [currentDate])
 
   return (
     <CalendarContext.Provider

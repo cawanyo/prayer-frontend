@@ -37,6 +37,7 @@ export const getProgramsByMonth = async ({year, month}: {year:number, month:numb
             throw new Error(res.statusText)
 
         const data = await res.json();
+        console.log(data)
         return {success: true, data:data}
     } catch (error) {
       return {success: false, data:null, error:error};

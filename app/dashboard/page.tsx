@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import LoadingOverlay from '@/components/base/LoadingOverlay';
 import { useAuth } from '@/utils/AuthContext';
 import { redirect } from 'next/navigation';

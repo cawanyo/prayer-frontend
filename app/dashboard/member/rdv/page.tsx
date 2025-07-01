@@ -17,7 +17,7 @@ export default function CreateRDVPage() {
             const {success, data} = await getUserRDV()
             if (success){
                 const rdvData = data as RDVType[]
-                setRdvs(data);
+                setRdvs(data? data: []);
             }
         }
         rdv();

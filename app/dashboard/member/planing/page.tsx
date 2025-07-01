@@ -9,22 +9,19 @@ import { getProgramsByMonth } from '@/utils/planing';
 import { useEffect, useState } from 'react';
 
 
+export async function getData(date: Date) {
+  const { success, data } = await getProgramsByMonth({ year: date.getFullYear(), month: date.getMonth() + 1 });
+  if (success)
+    return data as ProgramType[];
+  return [];
+}
+
 export default function page() {
   const [data, setData] = useState<ProgramType[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+
   useEffect(()=>{
-    const getProgram = async ()=> {
 
-        const date = new Date()
-
-        const {success, data} = await getProgramsByMonth({year:date.getFullYear(), month:date.getMonth()+1})
-
-        if (success)
-            setData(data)
-        
-        setLoading(false)
-    }
-    getProgram();
 }, [])
   return (
     <div className=' flex flex-1'>
@@ -33,7 +30,7 @@ export default function page() {
         &&
         <LoadingOverlay />
       }
-      <CalendarProvider<ProgramType> fullData={data} >
+      <CalendarProvider<ProgramType> getData={getData} >
         <Calendar<ProgramType>  >
           {(day) => (
             <PlainCalendarCell key={day.toString()} day={day}  />
